@@ -32,7 +32,7 @@ trait RefreshToken
     /**
      * The AwsCognito instance.
      *
-     * @var \Ellaisys\Cognito\AwsCognito
+     * @var AwsCognito
      */
     protected $cognito;
 
@@ -50,13 +50,14 @@ trait RefreshToken
     /**
      * Generate a new token.
      *
-     * @param  \Illuminate\Http\Request|Illuminate\Support\Collection  $request
-     * @param  string  $paramUsername (optional)
-     * @param  string  $paramRefreshToken (optional)
+     * @param Request $request
+     * @param string $paramUsername (optional)
+     * @param string $paramRefreshToken (optional)
      *
      * @return mixed
+     * @throws ValidationException
      */
-    public function refresh(Request $request, string $paramUsername='email', string $paramRefreshToken='refresh_token')
+    public function refresh(Request $request, string $paramUsername='email', string $paramRefreshToken='refresh_token'): mixed
     {
         try {
 

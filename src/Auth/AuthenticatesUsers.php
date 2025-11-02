@@ -99,7 +99,7 @@ trait AuthenticatesUsers
             $validator = Validator::make($request->only([$paramPassword])->toArray(), [
                 $paramPassword => 'required|regex:'.$passwordPolicy['regex']
             ], [
-                'regex' => 'Must contain atleast ' . $passwordPolicy['message']
+                'regex' => 'Must contain at least ' . $passwordPolicy['message']
             ]);
             if ($validator->fails()) {
                 Log::error($validator->errors());
@@ -163,10 +163,8 @@ trait AuthenticatesUsers
             //Fetch user details
             switch ($guard) {
                 case 'web': //Web
-//                    if (request()->session()->has($challenge['session'])) {
                     if (Session::has($challenge['session'])) {
                         //Get stored session
-//                        $sessionToken = request()->session()->get($challenge['session']);
                         $sessionToken = Session::get($challenge['session']);
                         $username = $sessionToken['username'];
                         $challenge['username'] = $username;
@@ -233,14 +231,14 @@ trait AuthenticatesUsers
     /**
      * Handle Generic Exception
      *
-     * @param \Illuminate\Support\Collection $request
+     * @param Collection $request
      * @param null $exception
      * @param bool $isJsonResponse
      * @param string $paramName
      * @return RedirectResponse|JsonResponse
      * @throws ValidationException
      */
-    private function sendFailedLoginResponse(\Illuminate\Support\Collection $request, $exception=null, bool $isJsonResponse=false, string $paramName='email'): RedirectResponse|JsonResponse
+    private function sendFailedLoginResponse(Collection $request, $exception=null, bool $isJsonResponse=false, string $paramName='email'): RedirectResponse|JsonResponse
     {
         $errorCode = 400;
         $errorMessageCode = 'cognito.validation.auth.failed';

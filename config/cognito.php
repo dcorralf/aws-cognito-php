@@ -246,13 +246,16 @@ return [
     /*
     |--------------------------------------------------------------------------
     | Allow new user email address to be verified during invitation
+    | Allow new user phone number to be verified during invitation
+
     |--------------------------------------------------------------------------
     |
     | This option enables the user email address to be tagged as verified during
-    | the to invitation for the new user. The default value is set to true.
+    | the to invitation for the new user and also the phone number as verified.
     |
     */
     'force_new_user_email_verified' => env('AWS_COGNITO_FORCE_NEW_USER_EMAIL_VERIFIED', false),
+    'force_new_user_phone_verified' => env('AWS_COGNITO_FORCE_NEW_USER_PHONE_VERIFIED', false),
 
     /*
     |--------------------------------------------------------------------------

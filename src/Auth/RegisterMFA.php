@@ -37,7 +37,7 @@ trait RegisterMFA
      *
      * @return mixed
      */
-    public function activateMFA(string $guard='web')
+    public function activateMFA(string $guard='web'): mixed
     {
         return Auth::guard($guard)->associateSoftwareTokenMFA();
     } //Function ends
