@@ -23,10 +23,13 @@ use Ellaisys\Cognito\Http\Parser\Parser;
 use Ellaisys\Cognito\Http\Parser\AuthHeaders;
 use Ellaisys\Cognito\Http\Parser\ClaimSession;
 
+use Ellaisys\Cognito\Providers\StorageProvider;
 
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Application;
+
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Aws\CognitoIdentityProvider\CognitoIdentityProviderClient;
 
@@ -35,7 +38,10 @@ use Aws\CognitoIdentityProvider\CognitoIdentityProviderClient;
  */
 class AwsCognitoServiceProvider extends ServiceProvider
 {
-    
+
+    //Laravel version
+    protected $laravelVersion;
+
     /**
      * Register the application services.
      *
@@ -43,6 +49,9 @@ class AwsCognitoServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        //Set Laravel Version
+        $this->setLaravelVersion();
+
         //Register resources
         $this->configure();
 
@@ -75,6 +84,23 @@ class AwsCognitoServiceProvider extends ServiceProvider
 
 
     /**
+     * Getter and Setter for Laravel Version
+     *
+     * @return string
+     */
+    public function getLaravelVersion(): string
+    {
+        return $this->laravelVersion;
+    } //Function ends
+    public function setLaravelVersion(): void
+    {
+        $laravelVersion = Application::VERSION;
+        Log::debug('Laravel Version: '.$laravelVersion);
+        $this->laravelVersion = $laravelVersion;
+    } //Function ends
+
+
+    /**
      * Register the package's publishable resources.
      *
      * @return void
@@ -90,10 +116,6 @@ class AwsCognitoServiceProvider extends ServiceProvider
             $this->publishes([
                 __DIR__.'/../../database/migrations' => $this->app->databasePath('migrations'),
             ], 'cognito-migrations');
-
-            // $this->publishes([
-            //     __DIR__.'/../../resources/views' => $this->app->resourcePath('views/vendor/cognito'),
-            // ], 'cognito-views');
         }
     } //Function ends
 
@@ -108,7 +130,7 @@ class AwsCognitoServiceProvider extends ServiceProvider
         $this->app->alias('ellaisys.aws.cognito', AwsCognito::class);
     }
 
-    
+
     /**
      * Setup the configuration for Cognito.
      *
@@ -135,11 +157,7 @@ class AwsCognitoServiceProvider extends ServiceProvider
                 $app['request'],
                 [
                     new AuthHeaders,
-                    new ClaimSession,
-                    // new QueryString,
-                    // new InputSource,
-                    // new RouteParams,
-                    // new Cookies($this->config('decrypt_cookies')),
+                    new ClaimSession
                 ]
             );
 
@@ -286,5 +304,5 @@ class AwsCognitoServiceProvider extends ServiceProvider
             $this->loadMigrationsFrom(__DIR__.'/../../database/migrations');
         } //End if
     } //Function ends
-    
+
 } //Class ends
