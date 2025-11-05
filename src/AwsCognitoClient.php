@@ -426,8 +426,9 @@ class AwsCognitoClient
                                ?string $groupname=null): bool
     {
         //Validate phone for MFA
-        if (config('cognito.mfa_setup')=="MFA_ENABLED" && config('cognito.mfa_type') == "SMS_MFA") {
-            if (empty($attributes['phone_number'])) { throw new HttpException(400, 'ERROR_MFA_ENABLED_PHONE_MISSING'); }
+        if (!empty(config('cognito.mfa_setup')) && config('cognito.mfa_setup')=="MFA_ENABLED"
+            && !empty(config('cognito.mfa_type')) && config('cognito.mfa_type') == "SMS_MFA") {
+                if (empty($attributes['phone_number'])) { throw new HttpException(400, 'ERROR_MFA_ENABLED_PHONE_MISSING'); }
         } //End if        
         
         //Force validate email
