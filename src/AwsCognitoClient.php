@@ -415,18 +415,18 @@ class AwsCognitoClient
      * https://docs.aws.amazon.com/cognito-user-identity-pools/latest/APIReference/API_AdminCreateUser.html
      *
      * @param $username
-     * @param $password (optional) (default=null)
+     * @param $password string|null (default=null)
      * @param array $attributes
-     * @param array $clientMetadata (optional)
-     * @param string $messageAction (optional)
+     * @param array|null $clientMetadata (optional)
+     * @param string|null $messageAction (optional)
      * @return bool $groupname (optional)
      */
-    public function inviteUser(string $username, string $password=null, array $attributes = [],
-                               array $clientMetadata=null, string $messageAction=null,
-                               string $groupname=null)
+    public function inviteUser(string  $username, ?string $password=null, array $attributes = [],
+                               ?array  $clientMetadata=null, ?string $messageAction=null,
+                               ?string $groupname=null): bool
     {
         //Validate phone for MFA
-        if (config('cognito.mfa_setup')=="MFA_ENABLED") {
+        if (config('cognito.mfa_setup')=="MFA_ENABLED" && config('cognito.mfa_type') == "SMS_MFA") {
             if (empty($attributes['phone_number'])) { throw new HttpException(400, 'ERROR_MFA_ENABLED_PHONE_MISSING'); }
         } //End if        
         
@@ -458,15 +458,15 @@ class AwsCognitoClient
         } //End If
 
         //Set Delivery Mediums
-        if ((config('cognito.add_user_delivery_mediums')!="NONE")) {
-            if (config('cognito.add_user_delivery_mediums')=="BOTH") {
-                $payload['DesiredDeliveryMediums'] = ['EMAIL', 'SMS'];
-            } else {
-                $defaultDeliveryMedium = config('cognito.add_user_delivery_mediums', "EMAIL");
-                $payload['DesiredDeliveryMediums'] = [ $defaultDeliveryMedium ];
-            } //End if
-        } //End if
-        if (config('cognito.mfa_setup')=="MFA_ENABLED") {
+//        if ((config('cognito.add_user_delivery_mediums')!="NONE")) {
+//            if (config('cognito.add_user_delivery_mediums')=="BOTH") {
+//                $payload['DesiredDeliveryMediums'] = ['EMAIL', 'SMS'];
+//            } else {
+//                $defaultDeliveryMedium = config('cognito.add_user_delivery_mediums', "EMAIL");
+//                $payload['DesiredDeliveryMediums'] = [ $defaultDeliveryMedium ];
+//            } //End if
+//        } //End if
+        if (config('cognito.mfa_setup') == "MFA_ENABLED" && config('cognito.mfa_type') == "SMS_MFA") {
             $defaultDeliveryMedium = 'SMS';
             $payload['DesiredDeliveryMediums'] = [ $defaultDeliveryMedium ];
         } //End if
