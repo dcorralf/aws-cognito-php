@@ -431,7 +431,7 @@ class AwsCognitoClient
         } //End if        
         
         //Force validate email
-        if ($attributes['email'] && config('cognito.force_new_user_email_verified', false)) {
+        if (!empty($attributes['email']) && config('cognito.force_new_user_email_verified', false)) {
             $attributes['email_verified'] = 'true';
         } //End if
 
