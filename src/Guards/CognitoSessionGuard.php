@@ -125,7 +125,7 @@ class CognitoSessionGuard extends SessionGuard implements StatefulGuard
      * @param string $paramPassword
      * @return bool|null
      */
-    public function attempt(array $credentials = [], $remember = false, string $paramUsername='email', string $paramPassword='password'): ?bool
+    public function attempt(array $credentials = [], $remember = false, string $paramUsername='email', string $paramPassword='password')
     {
         $request = collect([]);
 
